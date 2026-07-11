@@ -1,0 +1,62 @@
+schemaVersion: 2.2.0
+metadata:
+  name: fullstack-node-go-workspace
+  version: 1.0.0
+  description: A development environment combining Node.js and Go SDKs.
+
+components:
+  # 1. Node.js SDK Component for the Frontend
+  - name: frontend-node
+    container:
+      image: registry.redhat.io/devspaces/ubi8-nodejs-18:latest
+      memoryLimit: 2Gi
+      mountSources: true
+      endpoints:
+        - name: frontend-port
+          targetPort: 3000
+          exposure: public
+          protocol: http
+
+  # 2. Go SDK Component for the Backend
+  - name: backend-go
+    container:
+      image: registry.redhat.io/devspaces/ubi8-go-toolset:latest
+      memoryLimit: 2Gi
+      mountSources: true
+      endpoints:
+        - name: backend-port
+          targetPort: 8080
+          exposure: public
+          protocol: http
+
+commands:
+  # Commands for the Frontend (Node.js)
+  - id: install-frontend-dependencies
+    exec:
+      component: frontend-node
+      commandLine: "npm install"
+      workingDir: ${PROJECT_SOURCE}/frontend
+
+  - id: run-frontend
+    exec:
+      component: frontend-node
+      commandLine: "npm start"
+      workingDir: ${PROJECT_SOURCE}/frontend
+
+  # Commands for the Backend (Go)
+  - id: build-backend
+    exec:
+      component: backend-go
+      commandLine: "go build -o main ."
+      workingDir: ${PROJECT_SOURCE}/backend
+
+  - id: run-backend
+    exec:
+      component: backend-go
+      commandLine: "./main"
+      workingDir: ${PROJECT_SOURCE}/backend
+
+events:
+  # Optional: Automatically install frontend deps when the workspace starts
+  postStart:
+    - install-frontend-dependencies
