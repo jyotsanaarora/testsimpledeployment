@@ -8,7 +8,7 @@ components:
   # 1. Node.js SDK Component for the Frontend
   - name: frontend-node
     container:
-      image: registry.redhat.io/devspaces/ubi8-nodejs-18:latest
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
       memoryLimit: 2Gi
       mountSources: true
       endpoints:
@@ -20,7 +20,7 @@ components:
   # 2. Go SDK Component for the Backend
   - name: backend-go
     container:
-      image: registry.redhat.io/devspaces/ubi8-go-toolset:latest
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
       memoryLimit: 2Gi
       mountSources: true
       endpoints:
